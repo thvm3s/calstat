@@ -1,4 +1,4 @@
-const {extractHashtags} = require('./index');
+const {extractHashtags} = require('./models');
 const {expect, test} = require('@jest/globals');
 
 test('extracts a single hashtag', () => {
