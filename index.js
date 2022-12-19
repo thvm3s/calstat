@@ -8,24 +8,28 @@ program.option('--start <start date>').option('--end <end date>');
 program.parse();
 const opts = program.opts();
 
-// Be default, returns the beginning an end of the current week.
-function getDateRange() {
+// Be default, returns [last sunday, next monday].
+function getDateRange(today = new Date()) {
   if (opts['start'] && opts['end']) {
     return [new Date(opts['start']), new Date(opts['end'])];
   }
-  const today = new Date();
-  function lastSunday() {
-    return new Date(today.getDate() - today.getDay());
+  function midnightOf(date) {
+    const result = new Date();
+    result.setHours(0, 0, 0, 0);
+    result.setDate(date);
+    return result;
   }
-  function nextMonday() {
-    return new Date(today.getDate() + (6 - today.getDay()) + 1);
-  }
-  return [lastSunday(), nextMonday()];
+  return [
+    midnightOf(today.getDate() - today.getDay()),
+    midnightOf(today.getDate() + ((7 - today.getDay() + 1) % 7 || 7))
+  ];
 }
 
 async function listEvents(auth) {
   const calendar = google.calendar({version: 'v3', auth});
   const [startDate, endDate] = getDateRange();
+  console.log(startDate);
+  console.log(endDate);
   const res = await calendar.events.list({
     calendarId: 'primary',
     timeMin: startDate.toISOString(),
