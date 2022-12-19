@@ -1,5 +1,5 @@
 const {google} = require('googleapis');
-const {getDateRange} = require('program');
+const {getDateRange} = require('./program');
 const {authorize} = require('./auth')
 const {render} = require('./render');
 const {Track, Event} = require('./models');
