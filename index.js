@@ -1,29 +1,8 @@
 const {google} = require('googleapis');
-const {program} = require('commander');
+const {getDateRange} = require('program');
 const {authorize} = require('./auth')
 const {render} = require('./render');
 const {Track, Event} = require('./models');
-
-program.option('--start <start date>').option('--end <end date>');
-program.parse();
-const opts = program.opts();
-
-// Be default, returns [last sunday, next monday].
-function getDateRange(today = new Date()) {
-  if (opts['start'] && opts['end']) {
-    return [new Date(opts['start']), new Date(opts['end'])];
-  }
-  function midnightOf(date) {
-    const result = new Date();
-    result.setHours(0, 0, 0, 0);
-    result.setDate(date);
-    return result;
-  }
-  return [
-    midnightOf(today.getDate() - today.getDay()),
-    midnightOf(today.getDate() + ((7 - today.getDay() + 1) % 7 || 7))
-  ];
-}
 
 async function listEvents(auth) {
   const calendar = google.calendar({version: 'v3', auth});
