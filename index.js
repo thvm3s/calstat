@@ -28,8 +28,6 @@ function getDateRange(today = new Date()) {
 async function listEvents(auth) {
   const calendar = google.calendar({version: 'v3', auth});
   const [startDate, endDate] = getDateRange();
-  console.log(startDate);
-  console.log(endDate);
   const res = await calendar.events.list({
     calendarId: 'primary',
     timeMin: startDate.toISOString(),
