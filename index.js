@@ -4,9 +4,10 @@ const {authorize} = require('./auth')
 const {render} = require('./render');
 const {Track, Event} = require('./models');
 
+const [startDate, endDate] = getDateRange();
+
 async function listEvents(auth) {
   const calendar = google.calendar({version: 'v3', auth});
-  const [startDate, endDate] = getDateRange();
   const res = await calendar.events.list({
     calendarId: 'primary',
     timeMin: startDate.toISOString(),
@@ -26,6 +27,10 @@ function stat(events) {
       tracks[tag].add(event);
     }
   }
+  console.log(
+    "Period\n------\n" +
+    `[${startDate.toLocaleDateString()}` +
+    `, ${endDate.toLocaleDateString()})\n`)
   render(Object.values(tracks));
 }
 
